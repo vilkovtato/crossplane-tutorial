@@ -68,7 +68,7 @@ HYPERSCALER=$(gum choose "google" "aws" "azure")
 
 echo "export HYPERSCALER=$HYPERSCALER" >> .env
 
-if [[ "$HYPERSCALER" == "google" ]]; then
+if [ "$HYPERSCALER" = "google" ]; then
 
     gcloud auth login
 
@@ -78,14 +78,14 @@ if [[ "$HYPERSCALER" == "google" ]]; then
 
     gcloud projects create ${PROJECT_ID}
 
-    open "https://console.cloud.google.com/billing/linkedaccount?project=$PROJECT_ID"
+    echo "## Open https://console.cloud.google.com/billing/linkedaccount?project=$PROJECT_ID and link a billing account" \
+        | gum format
 
-    echo "## LINK A BILLING ACCOUNT" | gum format
     gum input --placeholder "Press the enter key to continue."
 
-    open "https://console.cloud.google.com/apis/library/sqladmin.googleapis.com?project=$PROJECT_ID"
+    echo "## Open https://console.cloud.google.com/apis/library/sqladmin.googleapis.com?project=$PROJECT_ID and *ENABLE* the API" \
+        | gum format
 
-    echo "## ENABLE the API" | gum format
     gum input --placeholder "Press the enter key to continue."
 
     export SA_NAME=devops-toolkit
@@ -109,7 +109,7 @@ if [[ "$HYPERSCALER" == "google" ]]; then
     yq --inplace ".spec.projectID = \"$PROJECT_ID\"" \
         providers/google-config.yaml
 
-elif [[ "$HYPERSCALER" == "aws" ]]; then
+elif [ "$HYPERSCALER" = "aws" ]; then
 
     AWS_ACCESS_KEY_ID=$(gum input --placeholder "AWS Access Key ID" --value "$AWS_ACCESS_KEY_ID")
     echo "export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID" >> .env
